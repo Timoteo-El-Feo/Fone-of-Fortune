@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fone of Fortune</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink:       #1a1008;
+    --paper:     #f5ead6;
+    --gold:      #c8922a;
+    --gold-pale: #e8c87a;
+    --gold-dim:  #7a5010;
+    --red:       #8b1a1a;
+    --red-pale:  #c0392b;
+    --cream:     #fdf6e3;
+    --shadow:    rgba(26,16,8,0.45);
+    --grain:     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--ink);
+    color: var(--paper);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: var(--grain);
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+    mix-blend-mode: overlay;
+  }
+
+  /* ── RADIAL GLOW ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 20%, rgba(200,146,42,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(139,26,26,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── CANDLELIGHT FLICKER ── */
+  @keyframes flicker {
+    0%,100% { opacity: 1; }
+    8%       { opacity: 0.92; }
+    13%      { opacity: 1; }
+    25%      { opacity: 0.96; }
+    47%      { opacity: 0.88; }
+    53%      { opacity: 1; }
+    74%      { opacity: 0.95; }
+    89%      { opacity: 0.9; }
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes slow-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse-glow {
+    0%,100% { box-shadow: 0 0 18px 4px rgba(200,146,42,0.25), inset 0 0 10px rgba(200,146,42,0.08); }
+    50%      { box-shadow: 0 0 34px 10px rgba(200,146,42,0.45), inset 0 0 18px rgba(200,146,42,0.15); }
+  }
+
+  @keyframes cord-sway {
+    0%,100% { transform: rotate(-1.5deg); }
+    50%      { transform: rotate(1.5deg); }
+  }
+
+  /* ─────────────────────────
+     WRAPPER
+  ───────────────────────── */
+  .wrapper {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 28px 100px;
+  }
+
+  /* ─────────────────────────
+     TOP ORNAMENT
+  ───────────────────────── */
+  .ornament-top {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fade-in 1.2s ease both;
+  }
+
+  .ornament-top svg {
+    width: 220px;
+    opacity: 0.55;
+    animation: flicker 7s ease-in-out infinite;
+  }
+
+  /* ─────────────────────────
+     PHONE ILLUSTRATION
+  ───────────────────────── */
+  .phone-wrap {
+    text-align: center;
+    margin-bottom: 36px;
+    animation: rise 1s ease 0.2s both;
+  }
+
+  .phone-illustration {
+    display: inline-block;
+    position: relative;
+    animation: cord-sway 6s ease-in-out infinite;
+    transform-origin: top center;
+  }
+
+  .phone-illustration svg {
+    width: min(260px, 70vw);
+    filter: drop-shadow(0 8px 32px rgba(200,146,42,0.3)) drop-shadow(0 2px 6px rgba(0,0,0,0.7));
+    animation: flicker 9s ease-in-out infinite 1s;
+  }
+
+  /* ─────────────────────────
+     MASTHEAD
+  ───────────────────────── */
+  .masthead {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: rise 1s ease 0.35s both;
+  }
+
+  .eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(38px, 10vw, 64px);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: 0.04em;
+    color: var(--gold-pale);
+    text-shadow:
+      0 0 40px rgba(200,146,42,0.5),
+      0 2px 0 var(--gold-dim),
+      2px 4px 16px rgba(0,0,0,0.8);
+    margin-bottom: 10px;
+    animation: flicker 11s ease-in-out infinite 0.5s;
+  }
+
+  h1 em {
+    display: block;
+    font-style: italic;
+    font-size: 0.55em;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(200,146,42,0.4);
+    margin-top: 4px;
+  }
+
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(14px, 3.5vw, 19px);
+    color: var(--paper);
+    opacity: 0.7;
+    margin-top: 16px;
+    line-height: 1.5;
+  }
+
+  /* ─────────────────────────
+     DIVIDER
+  ───────────────────────── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 36px 0;
+    opacity: 0.5;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .divider-symbol {
+    font-size: 18px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* ─────────────────────────
+     FORTUNE CARD
+  ───────────────────────── */
+  .fortune-card {
+    border: 1px solid rgba(200,146,42,0.3);
+    border-radius: 2px;
+    padding: 32px 36px;
+    background:
+      linear-gradient(135deg, rgba(200,146,42,0.06) 0%, transparent 50%, rgba(139,26,26,0.04) 100%),
+      rgba(26,16,8,0.6);
+    position: relative;
+    margin-bottom: 36px;
+    animation: rise 1s ease 0.5s both, pulse-glow 5s ease-in-out infinite 1.5s;
+    backdrop-filter: blur(2px);
+  }
+
+  /* corner ornaments */
+  .fortune-card::before, .fortune-card::after {
+    content: '✦';
+    position: absolute;
+    font-size: 12px;
+    color: var(--gold);
+    opacity: 0.5;
+  }
+  .fortune-card::before { top: 10px; left: 14px; }
+  .fortune-card::after  { bottom: 10px; right: 14px; }
+
+  .card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .card-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 4vw, 20px);
+    line-height: 1.75;
+    color: var(--paper);
+    font-style: italic;
+  }
+
+  .card-attribution {
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.12em;
+    text-align: right;
+  }
+
+  /* ─────────────────────────
+     WHAT IS THIS SECTION
+  ───────────────────────── */
+  .section {
+    margin-bottom: 48px;
+    animation: rise 1s ease 0.65s both;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(200,146,42,0.2);
+  }
+
+  .section p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(15px, 3.8vw, 18px);
+    line-height: 1.85;
+    color: rgba(245,234,214,0.85);
+    margin-bottom: 16px;
+  }
+
+  .section p:last-child { margin-bottom: 0; }
+
+  .highlight {
+    color: var(--gold-pale);
+    font-style: italic;
+  }
+
+  /* ─────────────────────────
+     HOW IT WORKS — STEPS
+  ───────────────────────── */
+  .steps {
+    list-style: none;
+    margin: 24px 0;
+  }
+
+  .steps li {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    animation: rise 0.8s ease both;
+  }
+
+  .steps li:nth-child(1) { animation-delay: 0.7s; }
+  .steps li:nth-child(2) { animation-delay: 0.85s; }
+  .steps li:nth-child(3) { animation-delay: 1.0s; }
+  .steps li:nth-child(4) { animation-delay: 1.15s; }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--gold);
+    background: rgba(200,146,42,0.06);
+    margin-top: 2px;
+  }
+
+  .step-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14px, 3.5vw, 17px);
+    line-height: 1.7;
+    color: rgba(245,234,214,0.82);
+    padding-top: 5px;
+  }
+
+  /* ─────────────────────────
+     PHONE SPECS BOX
+  ───────────────────────── */
+  .spec-box {
+    border: 1px solid rgba(200,146,42,0.2);
+    padding: 24px 28px;
+    margin: 28px 0;
+    background: rgba(200,146,42,0.03);
+    position: relative;
+  }
+
+  .spec-box-label {
+    position: absolute;
+    top: -9px;
+    left: 20px;
+    background: var(--ink);
+    padding: 0 10px;
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: rgba(245,234,214,0.65);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(200,146,42,0.07);
+  }
+
+  .spec-row:last-child { border-bottom: none; }
+
+  .spec-key { color: var(--gold-dim); flex-shrink: 0; }
+  .spec-val { color: rgba(245,234,214,0.8); text-align: right; }
+
+  /* ─────────────────────────
+     ARTIST STATEMENT QUOTE
+  ───────────────────────── */
+  .pull-quote {
+    border-left: 2px solid var(--gold);
+    padding: 6px 0 6px 24px;
+    margin: 28px 0;
+  }
+
+  .pull-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(15px, 4vw, 19px);
+    font-style: italic;
+    line-height: 1.75;
+    color: rgba(245,234,214,0.9);
+    margin-bottom: 8px !important;
+  }
+
+  .pull-quote cite {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  /* ─────────────────────────
+     COOKIE SLIP
+  ───────────────────────── */
+  .cookie-slip {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 22px 28px;
+    margin: 32px 0;
+    position: relative;
+    transform: rotate(-0.4deg);
+    box-shadow: 3px 4px 18px rgba(0,0,0,0.5);
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .cookie-slip::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: repeating-linear-gradient(
+      to right,
+      var(--gold) 0, var(--gold) 6px,
+      transparent 6px, transparent 12px
+    );
+    opacity: 0.4;
+  }
+
+  .cookie-slip-label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: 'Cinzel', serif;
+  }
+
+  .cookie-slip .fortune-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  .cookie-slip .lucky-numbers {
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+  }
+
+  /* ─────────────────────────
+     FOOTER
+  ───────────────────────── */
+  .footer {
+    text-align: center;
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(200,146,42,0.15);
+    animation: fade-in 1.5s ease 1.2s both;
+  }
+
+  .footer-ornament {
+    font-size: 22px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+    animation: flicker 8s ease-in-out infinite 2s;
+  }
+
+  .footer p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: rgba(245,234,214,0.3);
+    letter-spacing: 0.12em;
+    line-height: 1.9;
+  }
+
+  /* ─────────────────────────
+     RESPONSIVE
+  ───────────────────────── */
+  @media (max-width: 480px) {
+    .wrapper { padding: 40px 20px 80px; }
+    .fortune-card { padding: 24px 22px; }
+    .spec-box { padding: 20px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- TOP ORNAMENT -->
+  <div class="ornament-top">
+    <svg viewBox="0 0 220 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="20" x2="75" y2="20" stroke="#c8922a" stroke-width="0.75" stroke-dasharray="3,4"/>
+      <circle cx="83" cy="20" r="4" stroke="#c8922a" stroke-width="0.75"/>
+      <text x="110" y="24.5" text-anchor="middle" font-family="serif" font-size="14" fill="#c8922a">✦</text>
+      <circle cx="137" cy="20" r="4" stroke="#c8922a" stroke-width="0.75"/>
+      <line x1="145" y1="20" x2="220" y2="20" stroke="#c8922a" stroke-width="0.75" stroke-dasharray="3,4"/>
+    </svg>
+  </div>
+
+  <!-- PHONE ILLUSTRATION -->
+  <div class="phone-wrap">
+    <div class="phone-illustration">
+      <svg viewBox="0 0 200 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Glow halo -->
+        <ellipse cx="100" cy="260" rx="55" ry="10" fill="rgba(200,146,42,0.15)"/>
+
+        <!-- Phone body -->
+        <rect x="18" y="80" width="164" height="165" rx="12" fill="#1a1008" stroke="#c8922a" stroke-width="1.2"/>
+        <rect x="18" y="80" width="164" height="165" rx="12" fill="url(#phoneGrad)" opacity="0.6"/>
+
+        <!-- Handset cradle area -->
+        <path d="M30 98 Q100 90 170 98 L170 118 Q100 126 30 118 Z" fill="#2a1c0a" stroke="#7a5010" stroke-width="0.8"/>
+
+        <!-- Handset — wider than base, squared corners -->
+        <rect x="14" y="70" width="172" height="36" rx="5" fill="#2e1e0a" stroke="#c8922a" stroke-width="1.1"/>
+        <!-- Earpiece end cap — flat squared -->
+        <rect x="14" y="70" width="42" height="36" rx="5" fill="#261708" stroke="#c8922a" stroke-width="0.8"/>
+        <!-- Mouthpiece end cap — flat squared -->
+        <rect x="144" y="70" width="42" height="36" rx="5" fill="#261708" stroke="#c8922a" stroke-width="0.8"/>
+        <!-- Handset center grip -->
+        <rect x="50" y="74" width="100" height="28" rx="3" fill="#1e1208" stroke="#5a3e1a" stroke-width="0.5"/>
+
+        <!-- Keypad area — full width including function column -->
+        <rect x="30" y="140" width="140" height="98" rx="4" fill="#150f06" stroke="#5a3e1a" stroke-width="0.6"/>
+
+        <!-- Divider between number grid and function column -->
+        <line x1="128" y1="143" x2="128" y2="235" stroke="#5a3e1a" stroke-width="0.6" stroke-dasharray="2,3"/>
+
+        <!-- Number grid buttons 3×4 — left section -->
+        <g fill="#2a1c0a" stroke="#7a5010" stroke-width="0.5">
+          <!-- Row 1: 1 2 3 -->
+          <rect x="36" y="146" width="22" height="16" rx="3"/>
+          <rect x="63" y="146" width="22" height="16" rx="3"/>
+          <rect x="90" y="146" width="22" height="16" rx="3"/>
+          <!-- Row 2: 4 5 6 -->
+          <rect x="36" y="167" width="22" height="16" rx="3"/>
+          <rect x="63" y="167" width="22" height="16" rx="3"/>
+          <rect x="90" y="167" width="22" height="16" rx="3"/>
+          <!-- Row 3: 7 8 9 -->
+          <rect x="36" y="188" width="22" height="16" rx="3"/>
+          <rect x="63" y="188" width="22" height="16" rx="3"/>
+          <rect x="90" y="188" width="22" height="16" rx="3"/>
+          <!-- Row 4: * 0 # -->
+          <rect x="36" y="209" width="22" height="16" rx="3"/>
+          <rect x="63" y="209" width="22" height="16" rx="3"/>
+          <rect x="90" y="209" width="22" height="16" rx="3"/>
+        </g>
+
+        <!-- Number grid labels -->
+        <g font-family="monospace" font-size="7" fill="#c8922a" text-anchor="middle" opacity="0.7">
+          <text x="47" y="157">1</text>
+          <text x="74" y="157">2</text>
+          <text x="101" y="157">3</text>
+          <text x="47" y="178">4</text>
+          <text x="74" y="178">5</text>
+          <text x="101" y="178">6</text>
+          <text x="47" y="199">7</text>
+          <text x="74" y="199">8</text>
+          <text x="101" y="199">9</text>
+          <text x="47" y="220">*</text>
+          <text x="74" y="220">0</text>
+          <text x="101" y="220">#</text>
+        </g>
+
+        <!-- Function buttons column: MEM PROG REDIAL MUTE -->
+        <g fill="#221508" stroke="#7a5010" stroke-width="0.5">
+          <rect x="132" y="146" width="30" height="16" rx="3"/>
+          <rect x="132" y="167" width="30" height="16" rx="3"/>
+          <rect x="132" y="188" width="30" height="16" rx="3"/>
+          <rect x="132" y="209" width="30" height="16" rx="3"/>
+        </g>
+
+        <!-- Function button labels -->
+        <g font-family="monospace" font-size="5.2" fill="#e8c87a" text-anchor="middle" opacity="0.85">
+          <text x="147" y="156">MEM</text>
+          <text x="147" y="177">PROG</text>
+          <text x="147" y="195">RE</text>
+          <text x="147" y="201">DIAL</text>
+          <text x="147" y="219">MUTE</text>
+        </g>
+
+        <!-- Cord -->
+        <path d="M100 245 Q98 260 100 270" stroke="#7a5010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M100 270 Q102 276 100 280" stroke="#5a3010" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-dasharray="2,2"/>
+
+        <!-- Mystical sparkles -->
+        <circle cx="42" cy="55" r="1.5" fill="#c8922a" opacity="0.6">
+          <animate attributeName="opacity" values="0.6;0.1;0.6" dur="3.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="158" cy="48" r="1" fill="#e8c87a" opacity="0.4">
+          <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="170" cy="65" r="1.8" fill="#c8922a" opacity="0.3">
+          <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4.1s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="30" cy="70" r="1.2" fill="#e8c87a" opacity="0.5">
+          <animate attributeName="opacity" values="0.5;0.1;0.5" dur="3.7s" repeatCount="indefinite"/>
+        </circle>
+
+        <defs>
+          <linearGradient id="phoneGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#c8922a" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="#8b1a1a" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="eyebrow">An Interactive Audio Art Installation</div>
+    <h1>
+      Fone of Fortune
+      <em>📞 &nbsp; 🥠</em>
+    </h1>
+    <p class="subtitle">
+      Lift the receiver.<br>
+      Hear your fortune.
+    </p>
+  </div>
+
+  <div class="divider"><span class="divider-symbol">✦</span></div>
+
+  <!-- FORTUNE CARD -->
+  <div class="fortune-card">
+    <div class="card-label">A Fortune Awaits</div>
+    <p class="card-text">
+      The universe has placed a vintage telephone in your path.
+      This is not an accident. Pick it up.
+    </p>
+    <p class="card-attribution">— The Fone of Fortune</p>
+  </div>
+
+  <!-- WHAT IS THIS -->
+  <div class="section">
+    <div class="section-title">What Is This?</div>
+    <p>
+      You're looking at a <span class="highlight">restored AT&amp;T Traditional 1000 telephone</span>
+      from 1986 — one that my family actually owned when I was in elementary school.
+    </p>
+    <p>
+      But this phone no longer connects to the wall by our old writing desk. It has been
+      rewired, reprogrammed, and reborn as something stranger:
+      a <span class="highlight">fortune-telling machine</span>.
+    </p>
+    <p>
+      Lift the handset. The phone will speak to you — a recorded fortune,
+      drawn at random from a collection of voices, wisdom, and carefully curated
+      nonsense culled from actual fortunes I had collected from the 90s onwards.
+      Each call is different. Each fortune is yours alone.
+    </p>
+  </div>
+
+  <div class="divider"><span class="divider-symbol">🥠</span></div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="section-title">How to Consult the Oracle</div>
+    <ol class="steps">
+      <li>
+        <div class="step-num">I</div>
+        <div class="step-text">
+          <strong>Lift the handset.</strong> The phone will stir to life.
+          A brief pause — the oracle is consulting the ether.
+        </div>
+      </li>
+      <li>
+        <div class="step-num">II</div>
+        <div class="step-text">
+          <strong>Listen.</strong> Your fortune will be delivered
+          through the earpiece. Hold it close; oracles don't repeat themselves.
+        </div>
+      </li>
+      <li>
+        <div class="step-num">III</div>
+        <div class="step-text">
+          <strong>Replace the handset</strong> when you are finished.
+          The oracle returns to its slumber, awaiting the next seeker.
+        </div>
+      </li>
+      <li>
+        <div class="step-num">IV</div>
+        <div class="step-text">
+          <strong>Optional:</strong> Dial the keypad for deeper mysteries.
+          Not all of them are ready for you yet. Or should I say, you may not be ready for all of them yet.
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- COOKIE SLIP DECORATIVE -->
+  <div class="cookie-slip">
+    <div class="cookie-slip-label">Fortune Cookie Slip No. 0001</div>
+    <div class="fortune-text">
+      Ask your mom.
+    </div>
+    <div class="lucky-numbers">Lucky Numbers: 3 &nbsp;·&nbsp; 10 &nbsp;·&nbsp; 11 &nbsp;·&nbsp; 21 &nbsp;·&nbsp; 24 &nbsp;·&nbsp; 47</div>
+  </div>
+
+  <!-- ABOUT THE OBJECT -->
+  <div class="section">
+    <div class="section-title">About the Object</div>
+
+    <div class="pull-quote">
+      <p>
+        "We used to trust the telephone to carry the most important moments
+        of our lives — birth, grief, love, emergency. What would it mean
+        to trust it with something more uncertain: the future?"
+      </p>
+      <cite>— Artist's Statement</cite>
+    </div>
+
+    <p>
+      The exterior of the phone is embedded with <span class="highlight">actual fortune cookie slips</span>,
+      sealed under layers of protective varnish — a palimpsest of accumulated
+      wisdom, superstition, lucky lottery numbers, and the odd Chinese lesson.
+    </p>
+
+    <p>
+      Inside lives a small computer no larger than a credit card,
+      an audio amplifier, a speaker, and eight gigabytes of recorded voices.
+      The old wiring has been replaced; the new wiring asks different questions.
+    </p>
+
+    <div class="spec-box">
+      <div class="spec-box-label">Technical Specifications</div>
+      <div class="spec-row"><span class="spec-key">Object</span><span class="spec-val">AT&amp;T Traditional 1000 — ca. 1980s</span></div>
+      <div class="spec-row"><span class="spec-key">Brain</span><span class="spec-val">Adafruit Feather M4 Express</span></div>
+      <div class="spec-row"><span class="spec-key">Language</span><span class="spec-val">CircuitPython</span></div>
+      <div class="spec-row"><span class="spec-key">Audio</span><span class="spec-val">22,050 Hz · 16-bit · Mono WAV</span></div>
+      <div class="spec-row"><span class="spec-key">Storage</span><span class="spec-val">8 GB MicroSD</span></div>
+      <div class="spec-row"><span class="spec-key">Fortune Slips</span><span class="spec-val">Embedded under Mod Podge · 10+ coats</span></div>
+      <div class="spec-row"><span class="spec-key">Interactions</span><span class="spec-val">Handset Hook switch · Keypad · Volume · Speakerphone · Hidden Mode switch</span></div>
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-symbol">✦</span></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-ornament">📞</div>
+    <p>
+      Fone of Fortune<br>
+      A handmade interactive audio art installation<br>
+      <br>
+      Built with curiosity, solder, and an unreasonable<br>
+      number of fortune cookies.
+    </p>
+  </div>
+
+</div><!-- /wrapper -->
+</body>
+</html>
