@@ -1,0 +1,279 @@
+
+<style>
+  h2.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+  .page { padding: 0.5rem 0 2rem; font-size: 13px; }
+  .section { margin-bottom: 1.5rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .section-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .chip { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .section-head span { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .section-head small { font-size: 11px; color: var(--color-text-secondary); margin-left: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+  th { padding: 6px 12px; text-align: left; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+  td { padding: 6px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--color-background-secondary); }
+  .pin { font-family: var(--font-mono); font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .dest { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); }
+  .note { font-size: 11px; color: var(--color-text-tertiary); }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 4px; font-size: 10px; font-weight: 500; white-space: nowrap; }
+  .b-out  { background: #E6F1FB; color: #0C447C; }
+  .b-in   { background: #EAF3DE; color: #27500A; }
+  .b-ana  { background: #FAEEDA; color: #633806; }
+  .b-pwr  { background: #FCEBEB; color: #791F1F; }
+  .b-def  { background: #EEEDFE; color: #3C3489; }
+  .b-gnd  { background: #F1EFE8; color: #444441; }
+  @media (prefers-color-scheme: dark) {
+    .b-out  { background: #0C447C; color: #B5D4F4; }
+    .b-in   { background: #27500A; color: #C0DD97; }
+    .b-ana  { background: #633806; color: #FAC775; }
+    .b-pwr  { background: #791F1F; color: #F7C1C1; }
+    .b-def  { background: #3C3489; color: #CECBF6; }
+    .b-gnd  { background: #444441; color: #D3D1C7; }
+  }
+  .col-pin  { width: 13%; }
+  .col-dir  { width: 11%; }
+  .col-dest { width: 28%; }
+  .col-src  { width: 18%; }
+  .col-note { width: 30%; }
+</style>
+
+<div class="page">
+  <h2 class="sr-only">Fone of Fortune — master pin assignment and connection list for all components</h2>
+
+  <!-- ══ FEATHER M4 ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#BA7517"></span>
+      <span>Feather M4 Express</span>
+      <small>brain — all signals route through here</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">Feather pin</th>
+        <th class="col-dir">direction</th>
+        <th class="col-dest">connects to</th>
+        <th class="col-src">wire source</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="pin">A0</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">PAM8302A A+</td><td class="note">left pin col</td><td class="note">DAC audio out — the critical short audio run</td></tr>
+        <tr><td class="pin">A2</td><td><span class="badge b-ana">ANALOG IN</span></td><td class="dest">volume slider wiper (ISS4 pads 2+3)</td><td class="note">left pin col</td><td class="note">0–65535 normalized to 0.0–1.0 in code</td></tr>
+        <tr><td class="pin">SCK</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">MicroSD CLK</td><td class="note">left pin col</td><td class="note">hardware SPI — keep wire short</td></tr>
+        <tr><td class="pin">MOSI</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">MicroSD DI</td><td class="note">left pin col</td><td class="note">hardware SPI</td></tr>
+        <tr><td class="pin">MISO</td><td><span class="badge b-in">INPUT</span></td><td class="dest">MicroSD DO</td><td class="note">left pin col</td><td class="note">hardware SPI</td></tr>
+        <tr><td class="pin">D9</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">MicroSD CS</td><td class="note">right pin col</td><td class="note">chip select — locked, do not reassign</td></tr>
+        <tr><td class="pin">D5</td><td><span class="badge b-in">INPUT</span></td><td class="dest">JST-XH hook switch → ISS3 pad</td><td class="note">right pin col</td><td class="note">internal pull-up; LOW = handset lifted</td></tr>
+        <tr><td class="pin">D6</td><td><span class="badge b-in">INPUT</span></td><td class="dest">JST-XH DIAL switch → ISS3 pad</td><td class="note">right pin col</td><td class="note">internal pull-up; LOW = TT/Advanced mode</td></tr>
+        <tr><td class="pin">D10</td><td><span class="badge b-in">INPUT</span></td><td class="dest">OLH slider LO (ISS4 pad A)</td><td class="note">right pin col</td><td class="note">internal pull-up; LOW = LO position</td></tr>
+        <tr><td class="pin">D11</td><td><span class="badge b-in">INPUT</span></td><td class="dest">OLH slider HI (ISS4 pad C)</td><td class="note">right pin col</td><td class="note">internal pull-up; LOW = HI position; both HIGH = OFF / sleep</td></tr>
+        <tr><td class="pin">D12</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">CD4066BE pin 13 CtrlA</td><td class="note">right pin col</td><td class="note">HIGH = earpiece channel on</td></tr>
+        <tr><td class="pin">D13</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">CD4066BE pin 12 CtrlB</td><td class="note">right pin col</td><td class="note">HIGH = base speaker channel on</td></tr>
+        <tr><td class="pin">3.3V</td><td><span class="badge b-pwr">POWER</span></td><td class="dest">perfboard 3.3V rail</td><td class="note">left pin col</td><td class="note">short drop to top rail</td></tr>
+        <tr><td class="pin">GND</td><td><span class="badge b-gnd">GND</span></td><td class="dest">perfboard GND rail</td><td class="note">left pin col</td><td class="note">short drop to top rail</td></tr>
+        <tr><td class="pin">JST jack</td><td><span class="badge b-pwr">POWER</span></td><td class="dest">3.7V LiPoly battery</td><td class="note">underside</td><td class="note">no perfboard trace needed — direct plug</td></tr>
+        <tr style="opacity:0.6"><td class="pin">D0</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 1 (keypad row 1)</td><td class="note">left pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+        <tr style="opacity:0.6"><td class="pin">D1</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 2 (keypad row 2)</td><td class="note">left pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+        <tr style="opacity:0.6"><td class="pin">D4</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 3 (keypad row 3)</td><td class="note">left pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+        <tr style="opacity:0.6"><td class="pin">SCL / D22</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 4 (keypad row 4)</td><td class="note">right pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+        <tr style="opacity:0.6"><td class="pin">SDA / D21</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 5 (keypad col 1)</td><td class="note">right pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+        <tr style="opacity:0.6"><td class="pin">A1</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 6 (keypad col 2)</td><td class="note">left pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+        <tr style="opacity:0.6"><td class="pin">A3</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 7 (keypad col 3)</td><td class="note">left pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+        <tr style="opacity:0.6"><td class="pin">A4</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">ISS 2.5 receptacle pin 8 (keypad col 4)</td><td class="note">left pin col</td><td class="note">keypad matrix — Advanced mode only</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ MicroSD ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#185FA5"></span>
+      <span>MicroSD breakout+</span>
+      <small>8GB FAT32 · WAV files at 22050Hz / 16-bit / mono</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">Breakout pin</th>
+        <th class="col-dir">direction</th>
+        <th class="col-dest">connects to</th>
+        <th class="col-src">wire source</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="pin">5V</td><td><span class="badge b-gnd">NC</span></td><td class="dest">not connected</td><td class="note">—</td><td class="note">leave unconnected — use 3V pin instead</td></tr>
+        <tr><td class="pin">3V</td><td><span class="badge b-pwr">POWER</span></td><td class="dest">3.3V rail</td><td class="note">left edge pin</td><td class="note">short drop up to rail</td></tr>
+        <tr><td class="pin">GND</td><td><span class="badge b-gnd">GND</span></td><td class="dest">GND rail</td><td class="note">left edge pin</td><td class="note">short drop up to rail</td></tr>
+        <tr><td class="pin">CLK</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather SCK</td><td class="note">left edge pin</td><td class="note">SPI clock</td></tr>
+        <tr><td class="pin">DO</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">Feather MISO</td><td class="note">left edge pin</td><td class="note">SPI data out from SD</td></tr>
+        <tr><td class="pin">DI</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather MOSI</td><td class="note">left edge pin</td><td class="note">SPI data in to SD</td></tr>
+        <tr><td class="pin">CS</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather D9</td><td class="note">left edge pin</td><td class="note">chip select — locked to D9</td></tr>
+        <tr><td class="pin">CD</td><td><span class="badge b-gnd">NC</span></td><td class="dest">not connected</td><td class="note">—</td><td class="note">card detect — not used in code</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ PAM8302A ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#E24B4A"></span>
+      <span>PAM8302A amplifier</span>
+      <small>2.5W class D · pot trimmer set to max gain permanently</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">PAM pin</th>
+        <th class="col-dir">direction</th>
+        <th class="col-dest">connects to</th>
+        <th class="col-src">wire source</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="pin">Vin</td><td><span class="badge b-pwr">POWER</span></td><td class="dest">3.3V rail</td><td class="note">left pin col</td><td class="note">0.1µF mylar cap across Vin/GND on component side — not across rails</td></tr>
+        <tr><td class="pin">GND</td><td><span class="badge b-gnd">GND</span></td><td class="dest">GND rail</td><td class="note">left pin col</td><td class="note">other leg of 0.1µF decoupling cap</td></tr>
+        <tr><td class="pin">A+</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather A0 (DAC)</td><td class="note">left pin col</td><td class="note">critical audio run — keep as short as possible</td></tr>
+        <tr><td class="pin">A−</td><td><span class="badge b-in">INPUT</span></td><td class="dest">GND rail</td><td class="note">left pin col</td><td class="note">audio signal ground reference</td></tr>
+        <tr><td class="pin">SD</td><td><span class="badge b-in">INPUT</span></td><td class="dest">3.3V rail</td><td class="note">left pin col</td><td class="note">amp enable — tie HIGH permanently</td></tr>
+        <tr><td class="pin">OUT+</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">CD4066BE pin 1 (SwA-in) and pin 4 (SwB-in)</td><td class="note">screw terminal</td><td class="note">amplified audio — both switch inputs fed from OUT+</td></tr>
+        <tr><td class="pin">OUT−</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">GND rail (audio return)</td><td class="note">screw terminal</td><td class="note">speaker ground return path</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ CD4066BE ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#534AB7"></span>
+      <span>CD4066BE quad analog switch</span>
+      <small>DIP-14 · switches A and B used · C and D tied LOW</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">IC pin</th>
+        <th class="col-dir">direction</th>
+        <th class="col-dest">connects to</th>
+        <th class="col-src">wire source</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="pin">14 VDD</td><td><span class="badge b-pwr">POWER</span></td><td class="dest">3.3V rail</td><td class="note">right pin row</td><td class="note">0.1µF mylar cap across VDD/GND at this pin</td></tr>
+        <tr><td class="pin">7 VSS</td><td><span class="badge b-gnd">GND</span></td><td class="dest">GND rail</td><td class="note">left pin row</td><td class="note">other leg of 0.1µF decoupling cap</td></tr>
+        <tr><td class="pin">1 SwA-in</td><td><span class="badge b-in">INPUT</span></td><td class="dest">PAM8302A OUT+</td><td class="note">left pin row</td><td class="note">audio signal in — earpiece path</td></tr>
+        <tr><td class="pin">2 SwA-out</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">handset earpiece (white+green, ~262Ω)</td><td class="note">left pin row</td><td class="note">earpiece audio out when CtrlA HIGH</td></tr>
+        <tr><td class="pin">4 SwB-in</td><td><span class="badge b-in">INPUT</span></td><td class="dest">PAM8302A OUT+</td><td class="note">left pin row</td><td class="note">audio signal in — base speaker path</td></tr>
+        <tr><td class="pin">3 SwB-out</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">base speaker 3W/4Ω (+)</td><td class="note">left pin row</td><td class="note">speaker audio out when CtrlB HIGH</td></tr>
+        <tr><td class="pin">13 CtrlA</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather D12</td><td class="note">right pin row</td><td class="note">HIGH = switch A closed = earpiece on</td></tr>
+        <tr><td class="pin">12 CtrlB</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather D13</td><td class="note">right pin row</td><td class="note">HIGH = switch B closed = base speaker on</td></tr>
+        <tr><td class="pin">6 CtrlC</td><td><span class="badge b-gnd">GND</span></td><td class="dest">GND rail</td><td class="note">left pin row</td><td class="note">unused switch — must not float, tie LOW</td></tr>
+        <tr><td class="pin">5 SwC-in</td><td><span class="badge b-gnd">NC</span></td><td class="dest">not connected</td><td class="note">—</td><td class="note">unused switch input</td></tr>
+        <tr><td class="pin">12 CtrlD</td><td><span class="badge b-gnd">GND</span></td><td class="dest">GND rail</td><td class="note">right pin row</td><td class="note">unused switch — must not float, tie LOW</td></tr>
+        <tr><td class="pin">11 SwD-in</td><td><span class="badge b-gnd">NC</span></td><td class="dest">not connected</td><td class="note">—</td><td class="note">unused switch input</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ ISS3 ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#E24B4A"></span>
+      <span>ISS3 PCB — hook switch and DIAL switch</span>
+      <small>solder directly to ISS3 pads · wires exit via JST-XH 2-pin connectors</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">ISS3 signal</th>
+        <th class="col-dir">direction</th>
+        <th class="col-dest">connects to</th>
+        <th class="col-src">connector</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="pin">hook sw — signal</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather D5 (via JST-XH)</td><td class="note">JST-XH 2-pin #1 pin 1</td><td class="note">left pad set — vertically aligned with beige lever</td></tr>
+        <tr><td class="pin">hook sw — GND</td><td><span class="badge b-gnd">GND</span></td><td class="dest">perfboard GND rail (via JST-XH)</td><td class="note">JST-XH 2-pin #1 pin 2</td><td class="note">switch common — both switch grounds are independent JSTs</td></tr>
+        <tr><td class="pin">DIAL sw — signal</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather D6 (via JST-XH)</td><td class="note">JST-XH 2-pin #2 pin 1</td><td class="note">pin 1 or 3 (throw) of DPDT pole 1</td></tr>
+        <tr><td class="pin">DIAL sw — GND</td><td><span class="badge b-gnd">GND</span></td><td class="dest">perfboard GND rail (via JST-XH)</td><td class="note">JST-XH 2-pin #2 pin 2</td><td class="note">pin 2 (common/center) of DPDT pole 1</td></tr>
+        <tr><td class="pin">DIAL sw — pole 2</td><td><span class="badge b-gnd">NC</span></td><td class="dest">not connected</td><td class="note">—</td><td class="note">reserved — future mode indicator LED option</td></tr>
+        <tr><td class="pin">LED anode E trace</td><td><span class="badge b-pwr">POWER</span></td><td class="dest">3.3V rail via 220Ω resistor</td><td class="note">ISS3 ribbon connector pin</td><td class="note">shared anode for both keypad backlight LEDs</td></tr>
+        <tr><td class="pin">LED1 cathode D trace</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">Feather GPIO (TBD)</td><td class="note">ISS3 ribbon connector pin</td><td class="note">drive LOW to illuminate LED1</td></tr>
+        <tr><td class="pin">LED2 cathode F trace</td><td><span class="badge b-out">OUTPUT</span></td><td class="dest">Feather GPIO (TBD)</td><td class="note">ISS3 ribbon connector pin</td><td class="note">drive LOW to illuminate LED2</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ ISS4 ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#BA7517"></span>
+      <span>ISS4 PCB — OLH slider and volume slider</span>
+      <small>solder directly to ISS4 pads · 28AWG stranded hookup wire</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">ISS4 pad</th>
+        <th class="col-dir">direction</th>
+        <th class="col-dest">connects to</th>
+        <th class="col-src">wire source</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="pin">OLH pad A (pad 3)</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather D10</td><td class="note">ISS4 direct solder</td><td class="note">LO output — LOW when slider in LO position</td></tr>
+        <tr><td class="pin">OLH pad B (pad 2)</td><td><span class="badge b-gnd">GND</span></td><td class="dest">GND rail</td><td class="note">ISS4 direct solder</td><td class="note">common/center of OLH slider</td></tr>
+        <tr><td class="pin">OLH pad C (pad 1)</td><td><span class="badge b-in">INPUT</span></td><td class="dest">Feather D11</td><td class="note">ISS4 direct solder</td><td class="note">HI output — LOW when slider in HI position</td></tr>
+        <tr><td class="pin">vol pads 1+4 (fixed end A)</td><td><span class="badge b-pwr">POWER</span></td><td class="dest">3.3V rail</td><td class="note">ISS4 direct solder</td><td class="note">pads 1 and 4 are shorted by PCB trace</td></tr>
+        <tr><td class="pin">vol pads 2+3 (wiper)</td><td><span class="badge b-ana">ANALOG IN</span></td><td class="dest">Feather A2</td><td class="note">ISS4 direct solder</td><td class="note">pads 2 and 3 are shorted by PCB trace · locked to A2</td></tr>
+        <tr><td class="pin">vol pad 5 (fixed end B)</td><td><span class="badge b-gnd">GND</span></td><td class="dest">GND rail</td><td class="note">ISS4 direct solder</td><td class="note">42kΩ total pot resistance</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ ISS 2.5 ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#1D9E75"></span>
+      <span>ISS 2.5 — keypad matrix receptacle</span>
+      <small>8-pin JST-XH · 6mm × 22mm · vertical orientation · deferred — solder receptacle now, wire later</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">Receptacle pin</th>
+        <th class="col-dir">direction</th>
+        <th class="col-dest">connects to</th>
+        <th class="col-src">Feather col</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr style="opacity:0.65"><td class="pin">Pin 1</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather D0 (keypad row 1)</td><td class="note">left pin col</td><td class="note">matrix scan output</td></tr>
+        <tr style="opacity:0.65"><td class="pin">Pin 2</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather D1 (keypad row 2)</td><td class="note">left pin col</td><td class="note">matrix scan output</td></tr>
+        <tr style="opacity:0.65"><td class="pin">Pin 3</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather D4 (keypad row 3)</td><td class="note">left pin col</td><td class="note">matrix scan output</td></tr>
+        <tr style="opacity:0.65"><td class="pin">Pin 4</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather SCL / D22 (keypad row 4)</td><td class="note">right pin col</td><td class="note">matrix scan output</td></tr>
+        <tr style="opacity:0.65"><td class="pin">Pin 5</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather SDA / D21 (keypad col 1)</td><td class="note">right pin col</td><td class="note">matrix read input — pull-up in code</td></tr>
+        <tr style="opacity:0.65"><td class="pin">Pin 6</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather A1 (keypad col 2)</td><td class="note">left pin col</td><td class="note">matrix read input — pull-up in code</td></tr>
+        <tr style="opacity:0.65"><td class="pin">Pin 7</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather A3 (keypad col 3)</td><td class="note">left pin col</td><td class="note">matrix read input — pull-up in code</td></tr>
+        <tr style="opacity:0.65"><td class="pin">Pin 8</td><td><span class="badge b-def">DEFERRED</span></td><td class="dest">Feather A4 (keypad col 4)</td><td class="note">left pin col</td><td class="note">matrix read input — pull-up in code</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ POWER SUMMARY ══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="chip" style="background:#3B6D11"></span>
+      <span>Power and decoupling summary</span>
+      <small>3.3V and GND rails span full board width — rows 2 and 3</small>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="col-pin">Component</th>
+        <th class="col-dir">3.3V source</th>
+        <th class="col-dest">GND source</th>
+        <th class="col-src">decoupling cap</th>
+        <th class="col-note">notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="pin">Feather M4</td><td class="note">self-regulates from battery / USB</td><td class="note">rail</td><td class="note">onboard</td><td class="note">powers the 3.3V rail from its 3V pin</td></tr>
+        <tr><td class="pin">MicroSD breakout</td><td class="note">3.3V rail → 3V pin</td><td class="note">GND rail</td><td class="note">onboard</td><td class="note">uses 3V pin not 5V pin</td></tr>
+        <tr><td class="pin">PAM8302A</td><td class="note">3.3V rail → Vin</td><td class="note">GND rail → GND + A−</td><td class="note">0.1µF mylar at Vin/GND pins</td><td class="note">cap on component side, not across rails</td></tr>
+        <tr><td class="pin">CD4066BE</td><td class="note">3.3V rail → pin 14 VDD</td><td class="note">GND rail → pin 7 VSS</td><td class="note">0.1µF mylar at VDD/GND</td><td class="note">CtrlC and CtrlD also tied to GND rail</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
